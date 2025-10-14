@@ -1,0 +1,31 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "question": "What is Artificial Intelligence?",
+      "answers": [
+        "Artificial Intelligence enables machines to learn from data and make decisions.",
+        "AI is the ability of a computer to perform tasks that typically require human intelligence.",
+        "Artificial Intelligence refers to systems that mimic human cognitive abilities."
+      ]
+    },
+    {
+      "id": 2,
+      "question": "What is Machine Learning?",
+      "answers": [
+        "Machine learning is a subset of AI that trains algorithms to learn from data.",
+        "ML is a field that allows computers to improve automatically through experience.",
+        "Machine learning enables systems to identify patterns in data and make predictions."
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Explain Deep Learning.",
+      "answers": [
+        "Deep learning uses neural networks with many layers to process data.",
+        "It is a subset of machine learning focused on large neural networks.",
+        "Deep learning models learn hierarchical representations from data."
+      ]
+    }
+  ]
+}
