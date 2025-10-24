@@ -6,6 +6,7 @@ __pycache__/
 
 # --- Firebase / Private Keys ---
 serviceAccountKey.json
+test_auth.html
 
 # --- Optional ---
 .cursorignore

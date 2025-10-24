@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, auth, firestore
 
 # Path to your downloaded Firebase service account key
 cred = credentials.Certificate("serviceAccountKey.json")
@@ -10,3 +10,7 @@ if not firebase_admin._apps:
 
 # Get Firestore client
 db = firestore.client()
+
+
+# 2. ADD THIS LINE to export the auth module
+firebase_auth = auth
