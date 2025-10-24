@@ -60,4 +60,4 @@ def evaluate_answer(data: UserAnswer):
     except Exception as e:
         return {"error": str(e)} 
 
-# uvicorn app:app --reload
+# uvicorn evaluation:app --reload
