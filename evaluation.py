@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer, util
 from leaderboard import router as leaderboard_router
+from firebase_config import db
 
 app = FastAPI()
 
@@ -12,10 +13,17 @@ app.include_router(leaderboard_router)
 model = SentenceTransformer('all-mpnet-base-v2')
 
 # Load reference data
-def load_reference_data(file_path="reference_answers.json"):
-    with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data["questions"]
+def load_reference_data():
+    qna_ref = db.collection("QnA").stream()
+    questions = []
+    for doc in qna_ref:
+        q = doc.to_dict()
+        questions.append({
+            "id": q.get("id"),
+            "question": q.get("question_text"),
+            "answers": q.get("answers", [])
+        })
+    return questions
 
 reference_data = load_reference_data()
 
