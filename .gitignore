@@ -9,3 +9,4 @@ serviceAccountKey.json
 
 # --- Optional ---
 .cursorignore
+test_leaderboard.py

@@ -1,14 +1,18 @@
 # leaderboard.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+import os
 import redis
 from typing import List, Dict, Any
 
 router = APIRouter()
 
+# Read from environment variables, with defaults for local dev
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
 # --- Redis Connection ---
 # Make sure Redis server is running locally (port 6379)
-r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+r = redis.Redis(host='localhost', port=REDIS_PORT, db=0, decode_responses=True)
 
 LEADERBOARD_KEY = "tonequest_leaderboard"
 
@@ -53,32 +57,39 @@ def get_top_players(n: int):
 @router.get("/leaderboard/user/{user_id}")
 def get_user_rank(user_id: str):
     try:
-        rank = r.zrevrank(LEADERBOARD_KEY, user_id)
-        if rank is None:
+        # Get the user's 0-indexed rank
+        rank_0_idx = r.zrevrank(LEADERBOARD_KEY, user_id)
+        if rank_0_idx is None:
             raise HTTPException(status_code=404, detail="User not found in leaderboard")
-
+        
         score = r.zscore(LEADERBOARD_KEY, user_id)
         if score is None:
+            # This should be impossible if rank exists, but good to check
             raise HTTPException(status_code=404, detail="User score not found")
-
         score = float(score)
 
-        # Fetch a few ranks above and below (0-indexed)
-        start = max(rank - 2, 0)
-        end = rank + 2
-        nearby = r.zrevrange(LEADERBOARD_KEY, start, end, withscores=True)
+        # --- Updated Logic for 25 above / 24 below ---
+        # Spec: 25 above + 1 (self) + 24 below = 50 players total
+        # We use the 0-indexed rank to calculate the range.
+        start = max(rank_0_idx - 25, 0)
+        end = rank_0_idx + 24
+        # --- End of Updated Logic ---
 
+        # Fetch the players in that range
+        nearby = r.zrevrange(LEADERBOARD_KEY, start, end, withscores=True)
+        
         nearby_players = []
         for i, (u, s) in enumerate(nearby):
+            # The absolute rank is the starting offset + list index + 1
             nearby_players.append({
                 "rank": start + i + 1,
                 "user_id": u,
                 "score": round(float(s), 2)
             })
-
+            
         return {
             "user_id": user_id,
-            "rank": rank + 1,
+            "rank": rank_0_idx + 1,  # Convert 0-index to 1-index for display
             "score": round(score, 2),
             "nearby_players": nearby_players
         }
