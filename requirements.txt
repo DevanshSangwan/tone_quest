@@ -1,5 +1,10 @@
-fastapi==0.115.0
-uvicorn==0.30.0
-sentence-transformers==3.0.1
-torch>=2.0.0
-pydantic==2.8.2
+   fastapi==0.115.0
+   uvicorn==0.30.0
+   sentence-transformers==3.0.1
+   torch>=2.0.0
+   pydantic==2.8.2
+   pytest==8.4.2
+   fakeredis==2.32.0
+   redis==7.0.0
+   httpx==0.28.1
+   firebase-admin==7.1.0
