@@ -8,6 +8,11 @@ __pycache__/
 serviceAccountKey.json
 test_auth.html
 
+# Node.js / JavaScript junk
+package.json
+package-lock.json
+node_modules/
+
 # --- Optional ---
 .cursorignore
 test_leaderboard.py
